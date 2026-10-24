@@ -23,3 +23,6 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .vercel
+
+# Netlify local link state
+.netlify

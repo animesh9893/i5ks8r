@@ -1,0 +1,16 @@
+# Frontend hosting on Netlify (the API runs on Render from backend/Dockerfile).
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  # Public API URL, inlined into the bundle by Vite at build time (not a secret).
+  VITE_API_BASE_URL = "https://i5ks8r-api.onrender.com"
+
+# Single-page app: let React Router handle every path.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
