@@ -22,7 +22,7 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 - `forecast_selection.py`: `forecast_at_horizon`, `day_ahead_forecast(delivery_date, gate_local)`, `pair_with_actuals`.
 - `metrics.py`: `summary`, `by_horizon`, `by_hour`, `distribution`, `error_quantiles_by_horizon_bucket`.
 - Tests on tiny hand-built frames: picks the latest publish ≤ cutoff, returns NaN when nothing is early enough, the day-ahead gate handles the local/UTC conversion, and metrics match hand-calculated values.
-- ✅ `pytest` passes with coverage above 85 % for `services/`.
+- ✅ `pytest` passes with coverage above 85 % for `services/`. **Done** (100 %). Note for T4: the band uses `all_pairs` + `error_quantiles_by_horizon_bucket` (compute once per store load), then `apply_band`.
 
 ### T4: API routers (dependencies: T3)
 - Implement every endpoint in [04](04-api-contract.md) with pydantic schemas, 422/503 handling, and CORS.
