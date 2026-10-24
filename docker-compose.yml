@@ -1,0 +1,26 @@
+# Host ports can be overridden if 8000/5173 are busy: API_PORT=8001 WEB_PORT=5174 docker compose up --build
+services:
+  api:
+    build: ./backend
+    ports: ["${API_PORT:-8000}:8000"]
+    environment:
+      CORS_ORIGINS: http://localhost:${WEB_PORT:-5173}
+      DATA_SOURCE: ${DATA_SOURCE:-live}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
+    healthcheck:
+      test:
+        ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:${API_PORT:-8000}
+    ports: ["${WEB_PORT:-5173}:80"]
+    depends_on:
+      api:
+        condition: service_healthy
