@@ -15,5 +15,5 @@ COPY app ./app
 RUN useradd --create-home appuser && chown -R appuser /app
 USER appuser
 EXPOSE 8000
-# Railway injects $PORT; default to 8000 locally.
+# Render injects $PORT; default to 8000 locally.
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]

@@ -20,6 +20,10 @@ def test_health_reports_not_loaded(settings):
         assert c.get("/api/health").json() == {"status": "ok", "data_loaded": False}
 
 
-def test_cors_allows_vercel_preview(client):
-    resp = client.get("/api/health", headers={"Origin": "https://foo-git-main.vercel.app"})
-    assert resp.headers["access-control-allow-origin"] == "https://foo-git-main.vercel.app"
+def test_cors_allows_netlify_preview(client):
+    resp = client.get(
+        "/api/health", headers={"Origin": "https://deploy-preview-1--foo.netlify.app"}
+    )
+    assert (
+        resp.headers["access-control-allow-origin"] == "https://deploy-preview-1--foo.netlify.app"
+    )

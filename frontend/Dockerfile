@@ -1,4 +1,4 @@
-# Local / docker-compose only. Vercel builds the app natively.
+# Local / docker-compose only. Netlify builds the app natively.
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./

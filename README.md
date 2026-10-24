@@ -5,20 +5,26 @@ generation forecast available at decision time and measures how accurate those f
 Elexon BMRS data (FUELHH actuals, WINDFOR forecasts) for purchase decisions made in January 2026.
 
 ## Live links
-- App (Vercel): _TBD_
-- API docs (Railway): _TBD_/docs
+- **App:** https://i5ks8r.netlify.app
+- **API docs (Swagger):** https://i5ks8r-api.onrender.com/docs
+- **Repository:** https://github.com/animesh9893/i5ks8r
+
+The API runs on Render's free plan, which sleeps after 15 minutes without traffic. The first request
+after a sleep takes about a minute while the container starts and loads data; the app shows a loading
+state meanwhile.
 
 ## Repository layout
 | Path | What it is |
 |---|---|
-| `backend/` | Python FastAPI service (Dockerised, deployed to Railway) |
+| `backend/` | Python FastAPI service (Dockerised, deployed to Render from `backend/Dockerfile`) |
 | `backend/app/` | API code: `api/` routers, `clients/` Elexon client, `data/` in-memory store, `services/` forecast selection + metrics, `schemas.py` API contract |
 | `backend/tests/` | pytest suite |
-| `backend/Dockerfile`, `backend/railway.json` | container image and Railway config |
-| `frontend/` | React + TypeScript (Vite) single-page app, deployed to Vercel |
+| `backend/Dockerfile` | container image (used by Render and docker-compose) |
+| `frontend/` | React + TypeScript (Vite) single-page app, deployed to Netlify |
 | `frontend/src/` | `api/` client + types + hooks, `components/`, `pages/`, `state/`, `lib/` |
 | `frontend/Dockerfile`, `frontend/nginx.conf` | static build served by nginx (local / compose) |
 | `docker-compose.yml` | runs API + web locally |
+| `netlify.toml` | Netlify build config for the frontend (base dir, API URL, SPA routing) |
 | `.github/workflows/ci.yml` | lint, test, typecheck, build |
 | `PLAN.md`, `docs/plan/` | design and implementation plan |
 

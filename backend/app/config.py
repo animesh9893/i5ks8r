@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     cors_origins: str = "http://localhost:5173"
-    cors_origin_regex: str | None = r"https://.*\.vercel\.app"
+    cors_origin_regex: str | None = r"https://.*\.netlify\.app"
 
     elexon_base_url: str = "https://data.elexon.co.uk/bmrs/api/v1"
     data_source: str = "live"  # "live" (Elexon, snapshot fallback) or "snapshot"

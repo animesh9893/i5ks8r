@@ -27,7 +27,7 @@ def create_app(settings: Settings | None = None, store: DataStore | None = None)
         app.state.store = store or DataStore(settings)
         load_task = None
         if not app.state.store.is_loaded:
-            # Load in the background so /api/health answers immediately (Railway healthcheck);
+            # Load in the background so /api/health answers immediately (platform healthcheck);
             # data endpoints return 503 until loading finishes.
             load_task = asyncio.create_task(app.state.store.load())
             load_task.add_done_callback(_log_load_failure)
