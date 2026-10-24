@@ -15,8 +15,8 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 ### T2: Elexon client + DataStore + snapshot (dependencies: T1)
 - `clients/elexon.py`: async `fetch_actuals(date_from, date_to)` and `fetch_forecasts(pub_from, pub_to)` with tenacity retries and a 60 s timeout.
 - `data/store.py`: normalise to tz-aware UTC frames, dedupe, drop negative horizons, compute `horizon_h`, and add the snapshot fallback and `source` flag.
-- `scripts/fetch_snapshot.py` writes the snapshot JSON. Run it and commit the output.
-- ✅ Startup log shows the row counts (about 1.5k actuals, about 30k+ forecasts after filtering). With `DATA_SOURCE=snapshot`, the app works offline.
+- `scripts/fetch_snapshot.py` (`python -m scripts.fetch_snapshot` from `backend/`) writes gzipped snapshot JSON. Run it and commit the output.
+- ✅ Startup log shows the row counts (1,584 actuals; 15,775 forecasts from 272 publishes after filtering). With `DATA_SOURCE=snapshot`, the app works offline. **Done.**
 
 ### T3: Services + unit tests (dependencies: T2) ← most important for the tech review
 - `forecast_selection.py`: `forecast_at_horizon`, `day_ahead_forecast(delivery_date, gate_local)`, `pair_with_actuals`.

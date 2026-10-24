@@ -56,6 +56,15 @@ What we observed:
 
 The general "forecast vs actual at horizon h" view covers target times across January (Jan 1 to Feb 1).
 
+## Measured on the fetched window (T2, see `scripts/fetch_snapshot.py`)
+- Actuals: 1,584 half-hours, 2026-01-01 00:00 → 2026-02-02 23:30, **no gaps**, range 1.7 to 17.8 GW.
+- Forecasts: 19,856 raw rows → **15,775 with horizon ≥ 0**, from 272 publishes (8/day). The largest
+  gap between publishes is 4 h.
+- Per publish, the minimum horizon is 0.5 h (published at :30, first target at the next :00) and the
+  maximum is **46.5 to 66.5 h**.
+- Coverage over January hourly targets: **100 % for h ≤ 36 h**, 79 % at h = 48 h. T3/T4 must return
+  `null` forecasts (not errors) where nothing was published early enough, and report `n` in metrics.
+
 ## Snapshot fallback
 `backend/scripts/fetch_snapshot.py` writes `backend/app/data/snapshot/{fuelhh_wind,windfor}.json`
 (gzipped if over 1 MB). The app loads live data at startup. If Elexon fails, it loads the snapshot and
