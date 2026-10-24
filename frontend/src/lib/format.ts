@@ -15,8 +15,10 @@ export const fmtPct = (v: number | null | undefined) => (v == null ? missing : `
 export const fmtSignedGW = (v: number | null | undefined) =>
   v == null ? missing : `${v > 0 ? '+' : v < 0 ? '−' : ''}${one.format(Math.abs(v) / 1000)} GW`
 
-/** Compact axis tick: 12000 → "12 GW". */
-export const tickGW = (v: number) => `${int.format(v / 1000)} GW`
+const upToOne = new Intl.NumberFormat('en-GB', { maximumFractionDigits: 1 })
+
+/** Compact axis tick: 12000 → "12 GW", 2500 → "2.5 GW", −4000 → "−4 GW". */
+export const tickGW = (v: number) => `${v < 0 ? '−' : ''}${upToOne.format(Math.abs(v) / 1000)} GW`
 
 /** "15 Jan 14:00" in UK time. */
 export const fmtDateTimeUK = (iso: string | null | undefined) =>
@@ -36,4 +38,18 @@ export function addDays(ymd: string, n: number): string {
   const d = new Date(`${ymd}T12:00:00Z`)
   d.setUTCDate(d.getUTCDate() + n)
   return d.toISOString().slice(0, 10)
+}
+
+/** Round MW axis: ticks on a clean GW step covering [min, max] (min ≤ 0 ≤ max assumed). */
+export function mwAxis(values: (number | null | undefined)[], target = 5) {
+  const nums = values.filter((v): v is number => v != null && Number.isFinite(v))
+  const lo = Math.min(0, ...nums)
+  const hi = Math.max(0, ...nums)
+  const span = hi - lo || 1000
+  const step = [500, 1000, 2000, 2500, 4000, 5000, 10000].find((s) => span / s <= target) ?? 20000
+  const min = Math.floor(lo / step) * step
+  const max = Math.ceil(hi / step) * step
+  const ticks: number[] = []
+  for (let v = min; v <= max + 1e-9; v += step) ticks.push(v)
+  return { domain: [min, max] as [number, number], ticks }
 }

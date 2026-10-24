@@ -34,7 +34,7 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 
 ### T6: Pages + charts (dependencies: T4, T5)
 - DayAheadPage (BandChart + KPIs + table + CSV), ForecastVsActualPage (chart + error chart), AccuracyPage (cards, HorizonCurve, HourOfDayBars, ErrorHistogram, InsightBox) as in [05](05-frontend-ui.md).
-- ✅ Every chart renders against the local API for the whole of January, and the horizon slider updates within about 300 ms.
+- ✅ Every chart renders against the local API for the whole of January, and the horizon slider updates within about 300 ms. **Done.** Forecast vs Actual maps day-ahead mode to a 24 h horizon (the series endpoint needs a fixed horizon).
 
 ### T7: Deploy (dependencies: T6)
 - Follow [07](07-deployment.md) and complete the incognito smoke checklist.

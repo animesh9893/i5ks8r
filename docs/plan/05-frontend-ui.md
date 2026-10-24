@@ -50,7 +50,7 @@ of your need from the market."*
 - Number formatting: MW with thousands separators, GW with 1 decimal, GWh for energy.
 - Times shown in **UK local time** and labelled "(UK)". The API stays in UTC.
 - Responsive enough for a laptop demo. A mobile layout is a stretch goal.
-- Colours: actual = slate/black, forecast = blue, band = light blue, over-forecast = red, under = teal.
+- Colours (implemented, validated for colour-blind separation and contrast in light and dark, see `src/lib/theme.ts`): actual = blue, forecast = orange, band = orange wash, over-forecast = red, under-forecast = blue. Dark mode follows the OS setting.
 
 ## API client
 `client.ts` reads `import.meta.env.VITE_API_BASE_URL` (default `http://localhost:8000`).
