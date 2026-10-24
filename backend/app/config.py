@@ -19,6 +19,13 @@ class Settings(BaseSettings):
     actuals_date_from: str = "2026-01-01"
     actuals_date_to: str = "2026-02-02"
 
+    # Delivery days whose day-ahead purchase decision falls in January 2026.
+    delivery_date_from: str = "2026-01-02"
+    delivery_date_to: str = "2026-02-01"
+    # Default analysis window (hourly targets in [from, to)).
+    window_from: str = "2026-01-01T00:00:00Z"
+    window_to: str = "2026-02-01T00:00:00Z"
+
     day_ahead_gate_local: str = "11:00"
     max_horizon_hours: int = 48
 

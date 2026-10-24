@@ -26,7 +26,7 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 
 ### T4: API routers (dependencies: T3)
 - Implement every endpoint in [04](04-api-contract.md) with pydantic schemas, 422/503 handling, and CORS.
-- ✅ The `test_api.py` contract tests pass, and `/docs` lists every endpoint with examples.
+- ✅ The `test_api.py` contract tests pass, and `/docs` lists every endpoint with examples. **Done** (`tests/test_api_contract.py`; contract doc updated to the real responses).
 
 ### T5: Frontend shell (∥ with T3/T4 using mocked JSON; dependencies: T1)
 - Layout, Tabs, FilterBar synced to the URL, `api/client.ts`, `types.ts`, hooks, KpiCard, and loading/error/empty states.

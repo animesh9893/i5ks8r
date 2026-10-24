@@ -1,12 +1,16 @@
 import asyncio
 import logging
+import time
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from app.api.routes_meta import router as meta_router
+from app.api.routes_metrics import router as metrics_router
+from app.api.routes_series import router as series_router
 from app.config import Settings, get_settings
 from app.data.store import DataStore
 
@@ -44,7 +48,26 @@ def create_app(settings: Settings | None = None, store: DataStore | None = None)
         allow_methods=["GET", "POST"],
         allow_headers=["*"],
     )
+    # /api/series returns ~200 KB of JSON for a month; gzip cuts it ~10x.
+    app.add_middleware(GZipMiddleware, minimum_size=1024)
+    app.state.settings = settings
     app.include_router(meta_router)
+    app.include_router(series_router)
+    app.include_router(metrics_router)
+
+    @app.middleware("http")
+    async def log_requests(request: Request, call_next):
+        started = time.perf_counter()
+        response = await call_next(request)
+        logger.info(
+            "%s %s → %d in %.0f ms",
+            request.method,
+            request.url.path + (f"?{request.url.query}" if request.url.query else ""),
+            response.status_code,
+            (time.perf_counter() - started) * 1000,
+        )
+        return response
+
     return app
 
 

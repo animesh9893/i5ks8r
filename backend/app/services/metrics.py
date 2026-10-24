@@ -22,7 +22,8 @@ DEFAULT_HORIZON_BUCKETS: tuple[float, ...] = (0, 6, 12, 18, 24, 30, 36, 42, 48, 
 DEFAULT_QUANTILES: tuple[float, ...] = (0.1, 0.5, 0.9)
 
 
-def _num(x: Any) -> float | None:
+def clean_float(x: Any) -> float | None:
+    """float(x), with NaN/inf/None mapped to None (JSON-safe)."""
     if x is None:
         return None
     x = float(x)
@@ -57,16 +58,16 @@ def summary(paired: pd.DataFrame) -> dict[str, float | int | None]:
     corr = None if constant else v["forecast_mw"].corr(v["actual_mw"])
     return {
         "n": n,
-        "mae": _num(abs_err.mean()),
-        "rmse": _num(math.sqrt((err**2).mean())),
-        "bias": _num(err.mean()),
-        "nmae": _num(abs_err.mean() / mean_actual) if mean_actual else None,
-        "mape": _num(mape),
-        "p50_abs_error": _num(abs_err.quantile(0.5)),
-        "p90_abs_error": _num(abs_err.quantile(0.9)),
-        "p99_abs_error": _num(abs_err.quantile(0.99)),
-        "max_abs_error": _num(abs_err.max()),
-        "correlation": _num(corr),
+        "mae": clean_float(abs_err.mean()),
+        "rmse": clean_float(math.sqrt((err**2).mean())),
+        "bias": clean_float(err.mean()),
+        "nmae": clean_float(abs_err.mean() / mean_actual) if mean_actual else None,
+        "mape": clean_float(mape),
+        "p50_abs_error": clean_float(abs_err.quantile(0.5)),
+        "p90_abs_error": clean_float(abs_err.quantile(0.9)),
+        "p99_abs_error": clean_float(abs_err.quantile(0.99)),
+        "max_abs_error": clean_float(abs_err.max()),
+        "correlation": clean_float(corr),
     }
 
 
@@ -108,7 +109,12 @@ def by_hour(paired: pd.DataFrame) -> list[dict[str, float | int | None]]:
     grouped = pd.DataFrame({"hour_local": hour, "err": err, "abs": err.abs()}).groupby("hour_local")
     stats = grouped.agg(mae=("abs", "mean"), bias=("err", "mean"), n=("err", "size"))
     return [
-        {"hour_local": int(h), "mae": _num(r.mae), "bias": _num(r.bias), "n": int(r.n)}
+        {
+            "hour_local": int(h),
+            "mae": clean_float(r.mae),
+            "bias": clean_float(r.bias),
+            "n": int(r.n),
+        }
         for h, r in stats.iterrows()
     ]
 
@@ -126,9 +132,9 @@ def distribution(paired: pd.DataFrame, bins: int = 40) -> dict[str, Any]:
             for i in range(len(counts))
         ],
         "quantiles": {
-            "p05": _num(np.quantile(err, 0.05)),
-            "p50": _num(np.quantile(err, 0.5)),
-            "p95": _num(np.quantile(err, 0.95)),
+            "p05": clean_float(np.quantile(err, 0.05)),
+            "p50": clean_float(np.quantile(err, 0.5)),
+            "p95": clean_float(np.quantile(err, 0.95)),
         },
     }
 
@@ -206,13 +212,19 @@ def day_ahead_summary(rows: pd.DataFrame) -> dict[str, float | int | None]:
             ).sum()
         )
     return {
-        "expected_energy_mwh": _num(forecast.sum()),
-        "p10_energy_mwh": _num(rows["p10_mw"].sum(min_count=1)) if "p10_mw" in rows else None,
-        "p90_energy_mwh": _num(rows["p90_mw"].sum(min_count=1)) if "p90_mw" in rows else None,
-        "peak_forecast_mw": _num(forecast.max()),
-        "min_forecast_mw": _num(forecast.min()),
-        "max_ramp_mw_per_h": _num(ramp),
-        "realised_mae_mw": _num((has_actual["forecast_mw"] - has_actual["actual_mw"]).abs().mean())
+        "expected_energy_mwh": clean_float(forecast.sum()),
+        "p10_energy_mwh": clean_float(rows["p10_mw"].sum(min_count=1))
+        if "p10_mw" in rows
+        else None,
+        "p90_energy_mwh": clean_float(rows["p90_mw"].sum(min_count=1))
+        if "p90_mw" in rows
+        else None,
+        "peak_forecast_mw": clean_float(forecast.max()),
+        "min_forecast_mw": clean_float(forecast.min()),
+        "max_ramp_mw_per_h": clean_float(ramp),
+        "realised_mae_mw": clean_float(
+            (has_actual["forecast_mw"] - has_actual["actual_mw"]).abs().mean()
+        )
         if len(has_actual)
         else None,
         "hours_in_band": in_band,

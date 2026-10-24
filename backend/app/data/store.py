@@ -13,9 +13,10 @@ import asyncio
 import gzip
 import json
 import logging
+from collections.abc import Callable, Hashable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal, TypeVar
 
 import pandas as pd
 
@@ -29,6 +30,7 @@ ACTUALS_FILE = "fuelhh_wind.json.gz"
 FORECASTS_FILE = "windfor.json.gz"
 
 DataSource = Literal["live", "snapshot"]
+T = TypeVar("T")
 
 
 def normalise_actuals(records: list[Record]) -> pd.DataFrame:
@@ -119,6 +121,8 @@ class DataStore:
         self.source: DataSource | None = None
         self.loaded_at: datetime | None = None
         self.last_error: str | None = None
+        # Results derived from the current frames (e.g. error quantiles); cleared on every load.
+        self.cache: dict[Hashable, Any] = {}
 
     @property
     def is_loaded(self) -> bool:
@@ -161,7 +165,14 @@ class DataStore:
             raise ValueError(f"Empty response: {len(actuals)} actuals, {len(forecasts)} forecasts")
         return actuals, forecasts
 
+    def cached(self, key: Hashable, compute: Callable[[], T]) -> T:
+        """Memoise a computation on the current data; invalidated when data is reloaded."""
+        if key not in self.cache:
+            self.cache[key] = compute()
+        return self.cache[key]
+
     def _set(self, actuals: pd.DataFrame, forecasts: pd.DataFrame, source: DataSource) -> None:
+        self.cache = {}
         self.actuals = actuals
         self.forecasts = forecasts
         self.source = source
