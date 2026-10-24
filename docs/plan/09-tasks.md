@@ -38,14 +38,14 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 
 ### T7: Deploy (dependencies: T6)
 - Follow [07](07-deployment.md) and complete the incognito smoke checklist.
-- ✅ Both URLs are live and recorded in the README.
+- ✅ Both URLs are live and recorded in the README. **Done** (Netlify + Render; see 07).
 
 ### T8: README + docs (dependencies: T7)
 README must have: project summary, live links (Vercel app, API docs, repo), architecture diagram,
 **files and directories table**, how to run (Docker and without Docker), env vars, metric definitions
 and assumptions, testing, **"AI tools used" section** (state that Claude Code was used for planning
 and implementation assistance), and limitations / next steps.
-- ✅ A fresh clone + `docker compose up --build` works by following only the README.
+- ✅ A fresh clone + `docker compose up --build` works by following only the README. **Done.**
 
 ### T9: Video + submission (owner: you)
 See [10](10-video-and-submission.md).

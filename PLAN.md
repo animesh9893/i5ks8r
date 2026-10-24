@@ -8,6 +8,9 @@ decisions made in January 2026**.
 Stack: **React (Vite + TS)** on **Vercel**, **Python (FastAPI)** on **Railway**, **Docker** for the
 backend image and local full-stack dev. Time budget: **16 h total**.
 
+> **Update (as built):** the live deployment uses **Netlify** for the frontend and **Render** for the API
+> instead of Vercel and Railway. See [07-deployment.md](docs/plan/07-deployment.md) and the README.
+
 > This file is the summary. Each section links to a detail doc in [`docs/plan/`](docs/plan/).
 > An implementing agent should read this file, then [`09-tasks.md`](docs/plan/09-tasks.md), then
 > the detail doc for its task.
