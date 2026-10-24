@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 
 const TABS = [
   { to: '/day-ahead', label: 'Day-Ahead Planner' },
@@ -7,17 +7,17 @@ const TABS = [
 ]
 
 export default function Tabs() {
+  // Carry filters (from/to/h/day) across tabs.
+  const { search } = useLocation()
   return (
-    <nav className="mb-6 flex gap-1 border-b border-slate-200">
+    <nav aria-label="Views" className="mb-5 flex gap-1 overflow-x-auto border-b border-line">
       {TABS.map((tab) => (
         <NavLink
           key={tab.to}
-          to={tab.to}
+          to={{ pathname: tab.to, search }}
           className={({ isActive }) =>
-            `-mb-px border-b-2 px-4 py-2 text-sm font-medium ${
-              isActive
-                ? 'border-forecast text-forecast'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+            `-mb-px whitespace-nowrap border-b-2 px-4 py-2 text-sm font-medium ${
+              isActive ? 'border-accent text-ink' : 'border-transparent text-ink-2 hover:text-ink'
             }`
           }
         >

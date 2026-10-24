@@ -1,13 +1,45 @@
 @import 'tailwindcss';
 
+/*
+ * Semantic tokens. Light values here; dark values below (selected steps, not an automatic flip).
+ * Chart series colours live in src/lib/theme.ts (SVG attributes can't read CSS variables) and
+ * were validated for colour-blind separation and contrast in both modes.
+ */
 @theme {
-  --color-actual: #0f172a;
-  --color-forecast: #2563eb;
-  --color-band: #bfdbfe;
-  --color-over: #dc2626;
-  --color-under: #0d9488;
+  --color-page: #f6f6f4;
+  --color-surface: #fcfcfb;
+  --color-surface-2: #f0efec;
+  --color-line: #e2e1dc;
+  --color-ink: #0b0b0b;
+  --color-ink-2: #52514e;
+  --color-muted: #75746f;
+  --color-accent: #2a78d6;
+  --color-good: #0ca30c;
+  --color-critical: #d03b3b;
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+@layer base {
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --color-page: #121211;
+      --color-surface: #1a1a19;
+      --color-surface-2: #242422;
+      --color-line: #383835;
+      --color-ink: #f0efec;
+      --color-ink-2: #c3c2b7;
+      --color-muted: #9a998f;
+      --color-accent: #3987e5;
+    }
+  }
+
+  body {
+    @apply bg-page text-ink antialiased;
+    font-feature-settings: 'tnum' 0;
+  }
+}
+
+/* Tabular figures only where numbers stack in columns. */
+.tabular {
+  font-variant-numeric: tabular-nums;
 }

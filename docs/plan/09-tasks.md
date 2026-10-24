@@ -30,7 +30,7 @@ without updating both `backend/app/schemas.py` and `frontend/src/api/types.ts`.
 
 ### T5: Frontend shell (∥ with T3/T4 using mocked JSON; dependencies: T1)
 - Layout, Tabs, FilterBar synced to the URL, `api/client.ts`, `types.ts`, hooks, KpiCard, and loading/error/empty states.
-- ✅ Tabs navigate, filters survive a reload, and the source badge reads `/api/meta`.
+- ✅ Tabs navigate, filters survive a reload, and the source badge reads `/api/meta`. **Done.**
 
 ### T6: Pages + charts (dependencies: T4, T5)
 - DayAheadPage (BandChart + KPIs + table + CSV), ForecastVsActualPage (chart + error chart), AccuracyPage (cards, HorizonCurve, HourOfDayBars, ErrorHistogram, InsightBox) as in [05](05-frontend-ui.md).
