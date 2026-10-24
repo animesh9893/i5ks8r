@@ -7,9 +7,9 @@ Dev: `pytest`, `pytest-asyncio`, `ruff`, `respx` (mock httpx).
 ## Config (`app/config.py`, env vars)
 | Var | Default | Use |
 |---|---|---|
-| `PORT` | 8000 | Railway injects it |
-| `CORS_ORIGINS` | `http://localhost:5173` | comma-separated; add the Vercel prod and preview URLs |
-| `CORS_ORIGIN_REGEX` | `https://.*\.vercel\.app` | allows Vercel preview deploys |
+| `PORT` | 8000 | Render injects it |
+| `CORS_ORIGINS` | `http://localhost:5173` | comma-separated; prod sets `https://i5ks8r.netlify.app,http://localhost:5173` |
+| `CORS_ORIGIN_REGEX` | `https://.*\.netlify\.app` | prod narrows it to `https://([a-z0-9-]+--)?i5ks8r\.netlify\.app` (deploy previews) |
 | `ELEXON_BASE_URL` | `https://data.elexon.co.uk/bmrs/api/v1` | |
 | `DATA_SOURCE` | `live` | `live` = try Elexon then fall back to snapshot; `snapshot` = offline only |
 | `FORECAST_PUBLISH_FROM/TO` | `2025-12-29T00:00Z` / `2026-02-01T00:00Z` | |

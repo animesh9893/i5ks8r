@@ -5,11 +5,10 @@ national wind generation forecast** available at decision time and **measures ho
 forecasts are**, using Elexon BMRS data only (FUELHH actuals and WINDFOR forecasts) for **purchase
 decisions made in January 2026**.
 
-Stack: **React (Vite + TS)** on **Vercel**, **Python (FastAPI)** on **Railway**, **Docker** for the
+Stack: **React (Vite + TS)** on **Netlify**, **Python (FastAPI)** on **Render**, **Docker** for the
 backend image and local full-stack dev. Time budget: **16 h total**.
 
-> **Update (as built):** the live deployment uses **Netlify** for the frontend and **Render** for the API
-> instead of Vercel and Railway. See [07-deployment.md](docs/plan/07-deployment.md) and the README.
+> Live: app https://i5ks8r.netlify.app · API https://i5ks8r-api.onrender.com/docs · repo https://github.com/animesh9893/i5ks8r
 
 > This file is the summary. Each section links to a detail doc in [`docs/plan/`](docs/plan/).
 > An implementing agent should read this file, then [`09-tasks.md`](docs/plan/09-tasks.md), then
@@ -45,8 +44,8 @@ Analysis method: [08-analysis.md](docs/plan/08-analysis.md)
 
 ```
 <random-name>/                 # public GitHub repo with an anonymous name, e.g. "kjhwr"
-├── backend/                   # FastAPI app + Dockerfile (deployed to Railway)
-├── frontend/                  # Vite React TS app (deployed to Vercel)
+├── backend/                   # FastAPI app + Dockerfile (deployed to Render)
+├── frontend/                  # Vite React TS app (deployed to Netlify)
 ├── docs/                      # architecture notes, screenshots
 ├── docker-compose.yml         # local full stack
 ├── .github/workflows/ci.yml   # lint + test both apps
@@ -54,7 +53,7 @@ Analysis method: [08-analysis.md](docs/plan/08-analysis.md)
 ```
 Full tree: [02-repo-structure.md](docs/plan/02-repo-structure.md)
 
-## 3. Backend (FastAPI on Railway)
+## 3. Backend (FastAPI on Render)
 
 - `ElexonClient` (httpx, retries) → `DataStore` (pandas frames in memory, loaded at startup, with a
   **bundled JSON snapshot fallback** in case Elexon is down during the demo) → `services/`
@@ -65,7 +64,7 @@ Full tree: [02-repo-structure.md](docs/plan/02-repo-structure.md)
 
 | Endpoint | Purpose |
 |---|---|
-| `GET /api/health` | liveness for Railway |
+| `GET /api/health` | liveness for the Render healthcheck |
 | `GET /api/meta` | data coverage, refresh time, publish times |
 | `GET /api/series` | actual vs forecast time series at horizon *h* |
 | `GET /api/day-ahead` | forecast for delivery day *D* as at the gate, plus P10/P90 band |
@@ -74,7 +73,7 @@ Full tree: [02-repo-structure.md](docs/plan/02-repo-structure.md)
 | `GET /api/metrics/by-hour` | error by hour of day |
 | `GET /api/metrics/distribution` | histogram of errors |
 
-## 4. Frontend (React on Vercel)
+## 4. Frontend (React on Netlify)
 
 Three tabs share one global filter bar (date range and horizon):
 1. **Day-Ahead Planner**: pick a delivery day and see the forecast at decision time with a P10 to P90
@@ -88,17 +87,19 @@ Libraries: Tailwind, Recharts, TanStack Query, date-fns-tz. Wireframes: [05-fron
 
 ## 5. Docker
 
-- `backend/Dockerfile`: multi-stage `python:3.12-slim`, non-root user, runs `uvicorn` on `$PORT`. Railway uses it.
-- `frontend/Dockerfile`: node build → `nginx:alpine` (local/compose only; Vercel builds natively).
+- `backend/Dockerfile`: multi-stage `python:3.12-slim`, non-root user, runs `uvicorn` on `$PORT`. Render builds and runs it.
+- `frontend/Dockerfile`: node build → `nginx:alpine` (local/compose only; Netlify builds natively).
 - `docker-compose.yml`: `api:8000` + `web:5173→80`, one command `docker compose up --build`.
 Details: [06-docker.md](docs/plan/06-docker.md)
 
-## 6. Deployment
+## 6. Deployment (as built)
 
-- **Railway**: service root `backend/`, Dockerfile builder, healthcheck `/api/health`, env vars `CORS_ORIGINS`, `ADMIN_TOKEN`.
-- **Vercel**: root `frontend/`, framework Vite, env `VITE_API_BASE_URL=https://<railway-domain>`, SPA rewrite.
-- ⚠️ The brief says "deploy in vercel or heroku". The **frontend URL on Vercel is the app link you
-  submit**. Railway only hosts the API, so mention this in the README.
+- **Render** (API): Docker runtime, context `backend/`, `backend/Dockerfile`, Frankfurt, free plan, auto-deploy
+  from `main`; env `DATA_SOURCE=live`, `CORS_ORIGINS`/`CORS_ORIGIN_REGEX` for the Netlify domain and previews.
+- **Netlify** (app): root `netlify.toml` (base `frontend/`, `npm run build`, publish `dist`,
+  `VITE_API_BASE_URL=https://i5ks8r-api.onrender.com`, SPA redirect), linked to the GitHub repo.
+- ⚠️ The brief says "deploy in vercel or heroku". Netlify/Render are the equivalent static and
+  container hosts; the README states this. The **Netlify URL is the app link you submit**.
 Details: [07-deployment.md](docs/plan/07-deployment.md)
 
 ## 7. Execution order and time budget (16 h)
@@ -111,9 +112,8 @@ Details: [07-deployment.md](docs/plan/07-deployment.md)
 | 4 | API routers + contract tests | 1.5 |
 | 5 | Frontend shell, API client, filter bar | 1.5 |
 | 6 | Three pages + charts | 3.5 |
-| 7 | Deploy to Railway + Vercel, smoke test in incognito | 1.0 |
+| 7 | Deploy to Render + Netlify, smoke test in incognito | 1.0 |
 | 8 | README, analysis notes, polish | 1.0 |
 | 9 | Video recording (2 × 5 min) + submission form | 2.0 |
 
 Agent-ready task list with acceptance criteria: [09-tasks.md](docs/plan/09-tasks.md)
-Video script and submission checklist: [10-video-and-submission.md](docs/plan/10-video-and-submission.md)

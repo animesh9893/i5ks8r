@@ -15,7 +15,6 @@ kjhwr/
 ├── backend/
 │   ├── Dockerfile
 │   ├── .dockerignore
-│   ├── railway.json                # Railway build/deploy config (Dockerfile + healthcheck)
 │   ├── requirements.txt / requirements-dev.txt  # pinned deps
 │   ├── pyproject.toml              # ruff + pytest config
 │   ├── app/
@@ -46,7 +45,6 @@ kjhwr/
 ├── frontend/
 │   ├── Dockerfile                  # node build → nginx (local/compose only)
 │   ├── nginx.conf                  # SPA fallback
-│   ├── vercel.json                 # SPA rewrite
 │   ├── package.json  vite.config.ts  tsconfig.json  tailwind.config.ts  index.html
 │   └── src/
 │       ├── main.tsx  App.tsx       # router + QueryClientProvider + layout
@@ -68,7 +66,6 @@ kjhwr/
 └── docs/
     ├── plan/                       # these planning docs
     ├── architecture.md             # diagram + decisions (used in tech video)
-    └── screenshots/
 ```
 
 Conventions

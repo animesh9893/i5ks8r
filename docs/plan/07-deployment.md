@@ -1,7 +1,6 @@
 # 07: Deployment (Render backend + Netlify frontend)
 
-The plan originally used Railway and Vercel. The live deployment uses **Render** for the API and
-**Netlify** for the web app. The brief's "Vercel or Heroku" is satisfied in spirit: the frontend is on
+The live deployment uses **Render** for the API and **Netlify** for the web app. The brief's "Vercel or Heroku" is satisfied in spirit: the frontend is on
 a comparable static host, and the README says so.
 
 | Piece | Host | URL |

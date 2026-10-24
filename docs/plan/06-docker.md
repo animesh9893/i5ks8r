@@ -1,6 +1,6 @@
 # 06: Docker
 
-## `backend/Dockerfile` (Railway uses this exact file)
+## `backend/Dockerfile` (Render builds and runs this exact file)
 ```dockerfile
 FROM python:3.12-slim AS base
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
@@ -23,7 +23,7 @@ CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --pro
 
 `backend/.dockerignore`: `.venv  __pycache__  tests  .pytest_cache  *.pyc  .env`
 
-## `frontend/Dockerfile` (local and compose only; Vercel builds without Docker)
+## `frontend/Dockerfile` (local and compose only; Netlify builds without Docker)
 ```dockerfile
 FROM node:20-alpine AS build
 WORKDIR /app
@@ -66,4 +66,4 @@ Run: `docker compose up --build`, then open http://localhost:5173.
 Notes
 - Vite inlines `VITE_*` variables at **build time**, which is why the API URL is a build arg and not a runtime env var.
 - Day-to-day development without Docker: `uvicorn app.main:app --reload` and `npm run dev`. Docker is for reproducibility and deployment.
-- CI should run `docker build ./backend` so that a broken image fails before Railway sees it.
+- CI should run `docker build ./backend` so that a broken image fails before Render sees it.

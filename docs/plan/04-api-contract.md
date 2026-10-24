@@ -1,6 +1,6 @@
 # 04: API Contract (implemented in T4)
 
-Base URL: `https://<service>.up.railway.app`. All times are ISO-8601 UTC (`Z`); naive query
+Base URL: `https://i5ks8r-api.onrender.com`. All times are ISO-8601 UTC (`Z`); naive query
 datetimes are read as UTC. Power is in MW, energy in MWh, and `error_mw = forecast − actual`.
 Fields are `null` when a value doesn't exist (for example, no forecast was published early enough).
 The source of truth is `backend/app/schemas.py`; FastAPI serves interactive docs at `/docs`.
@@ -10,7 +10,7 @@ Common window params on data endpoints are `start` (inclusive) and `end` (exclus
 `2026-01-01 → 2026-02-01` and must fall within actuals coverage (`2026-01-01 → 2026-02-03`).
 
 ### `GET /api/health`
-`{"status":"ok","data_loaded":true}`. This is always 200, even while data is loading (Railway healthcheck).
+`{"status":"ok","data_loaded":true}`. This is always 200, even while data is loading (Render healthcheck).
 
 ### `GET /api/meta`
 ```json

@@ -22,7 +22,15 @@ dist/
 .idea/
 .vscode/*
 !.vscode/extensions.json
-.vercel
 
 # Netlify local link state
 .netlify
+
+# Screenshots and screen recordings: keep local, never commit
+screenshots/
+**/screenshots/
+Screenshot*
+Screen Shot*
+Screen Recording*
+*.mov
+
